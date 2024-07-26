@@ -1,4 +1,4 @@
-interface Data {
+interface ExerciseValues {
   exerciseDays: number[];
   target: number;
 }
@@ -13,23 +13,23 @@ interface Result {
   average: number;
 }
 
-function calculateExercises(data: Data): Result {
-  const periodLength = data.exerciseDays.length;
-  const trainingDays = data.exerciseDays.filter(day => day > 0).length;
-  const totalExercise = data.exerciseDays.reduce((sum, day) => sum + day, 0);
+function calculateExercises(exerciseDays: number[], target: number): Result {
+  const periodLength = exerciseDays.length;
+  const trainingDays = exerciseDays.filter(day => day > 0).length;
+  const totalExercise = exerciseDays.reduce((sum, day) => sum + day, 0);
   const average = totalExercise / periodLength;
-  const success = average >= data.target;
+  const success = average >= target;
   
   let rating: number;
   let ratingDescription: string;
 
-  if (average >= data.target * 1.5) {
+  if (average >= target * 1.5) {
     rating = 3;
     ratingDescription = 'Great job, you exercised more than your target quota.';
-  } else if (average >= data.target) {
+  } else if (average >= target) {
     rating = 2;
     ratingDescription = 'Good job, you hit the exercise quota.';
-  } else if (average >= data.target * 0.9){
+  } else if (average >= target * 0.8){
     rating = 2;
     ratingDescription = 'You were close to the target, be sure to exercise bit more.';
   } else {
@@ -43,9 +43,39 @@ function calculateExercises(data: Data): Result {
     success,
     rating,
     ratingDescription,
-    target: data.target,
+    target: target,
     average
   };
-}
+};
 
-console.log(calculateExercises({ exerciseDays: [3, 0, 2, 4.5, 0, 3, 1], target: 2 }))
+const parseExerciseArguments = (args: string[]): ExerciseValues => {
+  if (args.length < 4) throw new Error('Not enough arguments');
+  
+  const target = Number(args[2]);
+  const exerciseDays = args.slice(3).map(day => {
+    if (isNaN(Number(day))) {
+      throw new Error('Provided values weren\'t numbers!');
+    }
+    return Number(day);
+  });
+
+  if (isNaN(target)) {
+    throw new Error('Provided target value wasn\'t a number!');
+  }
+
+  return {
+    exerciseDays,
+    target
+  };
+};
+
+try {
+  const { exerciseDays, target } = parseExerciseArguments(process.argv);
+  console.log(calculateExercises(exerciseDays, target));
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.';
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message;
+  }
+  console.log(errorMessage);
+};
