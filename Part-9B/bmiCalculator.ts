@@ -1,9 +1,9 @@
-interface Values {
+export interface BmiValues {
   height: number;
   weight: number;
 }
 
-const calculateBmi = (height: number, weight: number): string => {
+export const calculateBmi = (height: number, weight: number): string => {
   const BMI = weight / ((height / 100) ** 2);
 
   const SEVERE_THINNESS = 16;
@@ -32,11 +32,11 @@ const calculateBmi = (height: number, weight: number): string => {
     case (BMI > OBESE_CLASS_II):
       return 'Obese Class III';
     default:
-      return null;
+      return 'Invalid input';
   }
 }
 
-const parseBmiArguments = (args: string[]): Values => {
+const parseBmiArguments = (args: string[]): BmiValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
   if (args.length > 4) throw new Error('Too many arguments');
 
