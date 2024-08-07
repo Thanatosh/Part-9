@@ -34,7 +34,7 @@ export const calculateBmi = (height: number, weight: number): string => {
     default:
       return 'Invalid input';
   }
-}
+};
 
 const parseBmiArguments = (args: string[]): BmiValues => {
   if (args.length < 4) throw new Error('Not enough arguments');
@@ -44,17 +44,17 @@ const parseBmiArguments = (args: string[]): BmiValues => {
     return {
       height: Number(args[2]),
       weight: Number(args[3])
-    }
+    };
   } else {
     throw new Error('Provided values weren\'t numbers!');
   }
-}
+};
 
 try {
   const { height, weight } = parseBmiArguments(process.argv);
   console.log(calculateBmi(height, weight));
 } catch (error: unknown) {
-  let errorMessage = 'Something bad happened.'
+  let errorMessage = 'Something bad happened.';
   if (error instanceof Error) {
     errorMessage += ' Error: ' + error.message;
   }

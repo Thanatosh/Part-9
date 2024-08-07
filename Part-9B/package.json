@@ -9,15 +9,21 @@
     "ts-node": "ts-node",
     "test": "test",
     "dev": "ts-node-dev index.ts",
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "lint": "eslint ."
   },
   "author": "J.H",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@stylistic/eslint-plugin": "^2.6.1",
+    "@types/eslint__js": "^8.42.3",
     "@types/express": "^4.17.21",
+    "eslint": "^9.8.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.0.1"
   },
   "dependencies": {
     "express": "^4.19.2"
