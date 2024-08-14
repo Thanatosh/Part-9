@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const data = [
+const DiagnosesEntries = [
     {
         "code": "M24.2",
         "name": "Disorder of ligament",
@@ -75,4 +75,4 @@ const data = [
         "latin": "Alia retinopathia proliferativa"
     }
 ];
-exports.default = data;
+exports.default = DiagnosesEntries;
