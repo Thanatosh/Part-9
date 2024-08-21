@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { Diary, Weather, Visibility} from './types';
 import diaryService from './services/diaries';
 
-function App(): JSX.Element {
+const App = (): JSX.Element => {
   const [diaries, setDiaries] = useState<Diary[]>([]);
   const [date, setDate] = useState('');
   const [weather, setWeather] = useState<Weather>(Weather.Sunny);
   const [visibility, setVisibility] = useState<Visibility>(Visibility.Great);
   const [comment, setComment] = useState('');
+  const [error, setError] = useState<string | null>(null);
   
   useEffect(() => {
     const fetchDiaryList = async () => {
@@ -16,9 +17,10 @@ function App(): JSX.Element {
         setDiaries(diaries);
       } catch (error) {
         console.error("Failed to fetch diaries", error);
+        setError("Failed to fetch diaries");
       }
     };
-    fetchDiaryList();
+    void fetchDiaryList();
   }, []);
 
   const diaryEntryCreation = async (event: React.SyntheticEvent) => {
@@ -28,7 +30,7 @@ function App(): JSX.Element {
       weather: weather,
       visibility: visibility,
       comment: comment
-    }
+    };
     try {
       const newDiary = await diaryService.createDiaryEntry(diaryEntryToAdd);
       setDiaries(diaries.concat(newDiary));
@@ -36,41 +38,68 @@ function App(): JSX.Element {
       setWeather(Weather.Sunny);
       setVisibility(Visibility.Great);
       setComment('');
+      setError(null);
     } catch (error) {
       console.error("Failed to create Diary entry", error);
+      setError("Failed to create Diary entry");
     }
-  }
+  };
 
   return (
     <div>
-      <form onSubmit={diaryEntryCreation}>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <h1>Add new entry</h1>
+      <form onSubmit={(event) => { void diaryEntryCreation(event); }}>
         <div>
-          <label>Date: </label>
-          <input value={date} onChange={(event) => setDate(event.target.value)} />
+          <label>Date:
+            <input
+              type="date"
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+              required
+            />
+           </label>
         </div>
         <div>
-          <label>Weather: </label>
-          <select value={weather} onChange={(event) => setWeather(event.target.value as Weather)}>
-            {Object.values(Weather).map(weatherOption => (
-              <option key={weatherOption} value={weatherOption}>
-                {weatherOption}
-              </option>
-            ))}
-          </select>
+        <label>Weather:
+          {Object.values(Weather).map((weatherOption) => (
+            <label key={weatherOption}>
+              <input
+                type="radio"
+                name="weather"
+                value={weatherOption}
+                checked={weather === weatherOption}
+                onChange={() => setWeather(weatherOption)}
+              />
+              {weatherOption}
+            </label>
+          ))}
+        </label>
         </div>
         <div>
-          <label>Visibility: </label>
-          <select value={visibility} onChange={(event) => setVisibility(event.target.value as Visibility)}>
-            {Object.values(Visibility).map(visibilityOption => (
-              <option key={visibilityOption} value={visibilityOption}>
-                {visibilityOption}
-              </option>
-            ))}
-          </select>
+        <label>Visibility:
+          {Object.values(Visibility).map((visibilityOption) => (
+            <label key={visibilityOption}>
+              <input
+                type="radio"
+                name="visibility"
+                value={visibilityOption}
+                checked={visibility === visibilityOption}
+                onChange={() => setVisibility(visibilityOption)}
+              />
+              {visibilityOption}
+            </label>
+          ))}
+        </label>
         </div>
         <div>
-          <label>Comment: </label>
-          <input value={comment} onChange={(event) => setComment(event.target.value)} />
+          <label>Comment:
+          <input 
+            name="comment"
+            value={comment} 
+            onChange={(event) => setComment(event.target.value)} 
+          />
+          </label>
         </div>
         <button type='submit'>Add</button>
       </form>
