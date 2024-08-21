@@ -13,6 +13,17 @@ const getAll = async () => {
   }
 };
 
+const createDiaryEntry = async (object: Omit<Diary, 'id'>): Promise<Diary> => {
+  try {
+    const { data } = await axios.post<Diary>(`${apiBaseUrl}/diaries`, object);
+    return data;
+  } catch (error) {
+    console.error("Failed to create Diary entry", error);
+    throw error;
+  }
+};
+
 export default {
   getAll,
+  createDiaryEntry
 };
