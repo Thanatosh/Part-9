@@ -70,3 +70,4 @@ type UnionOmit<T, K extends keyof any> = T extends unknown ? Omit<T, K> : never;
 export type EntryWithoutId = UnionOmit<Entry, 'id'>;
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 export type NewPatientEntry = Omit<Patient, 'id' | 'entries'> & { entries: EntryWithoutId[] };
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
