@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import patientService from '../../services/patients'
-import { Patient, Gender } from "../../types";
+import { Patient, Gender, Entry } from "../../types";
 import { Container, Typography } from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
@@ -54,6 +54,16 @@ const PatientDetails = () => {
       <Typography><b>Occupation:</b> {patient.occupation}</Typography>
       <Typography><b>Date of Birth:</b> {patient.dateOfBirth}</Typography>
       <Typography><b>SSN:</b> {patient.ssn}</Typography>
+      <Typography variant="h5" style={{ marginTop: "20px" }}>Entries</Typography>
+      {patient.entries.map((entry: Entry) => (
+        <div key={entry.id} style={{ marginTop: "5px"}}>
+          <Typography><b>Date:</b> {entry.date}</Typography>
+          <Typography><b>Description:</b> {entry.description}</Typography>
+          {entry.diagnosisCodes && (
+            <Typography><b>Diagnosis Codes:</b> {entry.diagnosisCodes.join(', ')}</Typography>
+          )}
+        </div>
+      ))}
     </Container>
   );
 };
