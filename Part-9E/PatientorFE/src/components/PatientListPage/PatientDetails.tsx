@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import patientService from '../../services/patients'
 import diagnosisService from "../../services/diagnoses";
-import { Patient, Gender, Entry } from "../../types";
+import { Patient, Gender, Entry, Diagnosis } from "../../types";
 import { Container, Typography } from '@mui/material';
 import MaleIcon from '@mui/icons-material/Male';
 import FemaleIcon from '@mui/icons-material/Female';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import { Diagnosis } from "../../types";
+import EntryDetails from "./EntryDetails";
 
 const PatientDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -77,9 +77,8 @@ const PatientDetails = () => {
       <Typography><b>SSN:</b> {patient.ssn}</Typography>
       <Typography variant="h5" style={{ marginTop: "20px" }}>Entries</Typography>
       {patient.entries.map((entry: Entry) => (
-        <div key={entry.id} style={{ marginTop: "5px"}}>
-          <Typography><b>Date:</b> {entry.date}</Typography>
-          <Typography><b>Description:</b> {entry.description}</Typography>
+        <div key={entry.id} style={{ marginTop: "10px", padding: "10px", border: "1px solid #ccc", borderRadius: "5px" }}>
+          <EntryDetails entry={entry} />
           {entry.diagnosisCodes && (
             <ul>
               {entry.diagnosisCodes.map((code) => (
