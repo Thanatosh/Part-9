@@ -1,4 +1,4 @@
-import { NewPatientEntry, Gender, EntryWithoutId } from './types';
+import { NewPatientEntry, Gender, EntryWithoutId, HealthCheckEntry, OccupationalHealthcareEntry, HospitalEntry, HealthCheckRating } from './types';
 
 const isString = (text: unknown): text is string => {
   return typeof text === 'string' || text instanceof String;
@@ -8,8 +8,27 @@ const isGender = (param: string): param is Gender => {
   return Object.values(Gender).map(v => v.toString()).includes(param);
 };
 
-const isEntryType = (param: unknown): param is EntryWithoutId['type'] => {
-  return param === 'HealthCheck' || param === 'OccupationalHealthcare' || param === 'Hospital';
+const isHealthCheckEntry = (entry: any): entry is HealthCheckEntry => {
+  return entry.type === 'HealthCheck' &&
+    'date' in entry &&
+    'description' in entry &&
+    'specialist' in entry &&
+    'healthCheckRating' in entry;
+};
+
+const isOccupationalHealthcareEntry = (entry: any): entry is OccupationalHealthcareEntry => {
+  return entry.type === 'OccupationalHealthcare' &&
+    'date' in entry &&
+    'description' in entry &&
+    'specialist' in entry &&
+    'employerName' in entry;
+};
+
+const isHospitalEntry = (entry: any): entry is HospitalEntry => {
+  return entry.type === 'Hospital' &&
+    'date' in entry &&
+    'description' in entry &&
+    'specialist' in entry;
 };
 
 const parseName = (name: unknown): string => {
@@ -47,18 +66,34 @@ const parseGender = (gender: unknown): string => {
   return gender;
 };
 
-const parseEntry = (entry: unknown): EntryWithoutId => {
-  if (!entry || typeof entry !== 'object' || !('type' in entry)) {
-    throw new Error('Incorrect or missing entry');
-  }
-  const { type } = entry as { type: unknown };
-  if (!isEntryType(type)) {
+export const parseEntry = (object: any): EntryWithoutId => {
+  if (!object || typeof object !== 'object' || !('type' in object)) {
     throw new Error('Incorrect or missing entry type');
   }
-  return {
-    ...entry,
-    type
-  } as EntryWithoutId;
+
+  const { type } = object;
+  switch (type) {
+    case 'HealthCheck':
+      if (!isHealthCheckEntry(object)) {
+        throw new Error('Invalid HealthCheck entry');
+      }
+      return {
+        ...object,
+        healthCheckRating: object.healthCheckRating as HealthCheckRating
+      };
+    case 'OccupationalHealthcare':
+      if (!isOccupationalHealthcareEntry(object)) {
+        throw new Error('Invalid OccupationalHealthcare entry');
+      }
+      return object;
+    case 'Hospital':
+      if (!isHospitalEntry(object)) {
+        throw new Error('Invalid Hospital entry');
+      }
+      return object;
+    default:
+      throw new Error('Invalid entry type');
+  }
 };
 
 const toNewPatientEntry = (object: unknown): NewPatientEntry => {
