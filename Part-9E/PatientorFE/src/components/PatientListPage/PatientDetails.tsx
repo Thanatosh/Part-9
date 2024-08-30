@@ -115,6 +115,7 @@ const PatientDetails = () => {
         <NewEntryForm
           onCancel={() => setShowForm(false)}
           onSubmit={submitNewEntry}
+          diagnosisCodes={diagnoses}
         />
       )}
     </Container>
