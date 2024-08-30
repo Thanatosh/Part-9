@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import patientService from '../../services/patients'
+import patientService from '../../services/patients';
 import diagnosisService from "../../services/diagnoses";
 import { Patient, Gender, Entry, Diagnosis, EntryFormValues } from "../../types";
 import { Container, Typography, Button } from '@mui/material';

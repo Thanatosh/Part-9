@@ -99,7 +99,7 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HealthCheckEntry;
 
-type UnionOmit<T, K extends keyof any> = T extends unknown ? Omit<T, K> : never;
+type UnionOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
 export type EntryWithoutId = UnionOmit<Entry, 'id'>;
 export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 export type NewPatientEntry = Omit<Patient, 'id' | 'entries'> & { entries: EntryWithoutId[] };
